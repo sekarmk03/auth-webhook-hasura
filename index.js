@@ -6,7 +6,7 @@ const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
 
-app.use(morgan('dev'));
+app.use(morgan('prod'));
 app.use(express.json());
 app.use(cors({
   origin: '*',
