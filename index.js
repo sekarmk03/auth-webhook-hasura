@@ -27,9 +27,8 @@ app.get('/', (req, res) => {
 app.get('/validate-request', (req, res) => {
     let authHeader = req.header('Authorization');
     if (!authHeader) {
-        return res.status(401).json({
-            error: 'Unauthorized',
-            message: 'Missing Authorization header',
+        return res.status(200).json({
+            'X-Hasura-Role': 'anonymous',
         });
     }
 
