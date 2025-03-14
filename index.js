@@ -78,7 +78,8 @@ app.get('/validate-request', (req, res) => {
             
         const sessionVariables = {
             'X-Hasura-User-Id': claims["x-hasura-user-id"] || payload.id,
-            'X-Hasura-Role': claims["x-hasura-role"] || "user",
+            // 'X-Hasura-Role': claims["x-hasura-role"] || "user",
+            'X-Hasura-Role': "admin",
         };
 
         return res.status(200).json(sessionVariables);
