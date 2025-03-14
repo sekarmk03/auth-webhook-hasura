@@ -35,6 +35,8 @@ app.get('/', (req, res) => {
 app.get('/validate-request', (req, res) => {
     let authHeader = req.header('Authorization');
     if (!authHeader) {
+        console.log('INFO: No Authorization header found. Granting anonymous access.');
+        
         return res.status(200).json({
             'X-Hasura-Role': 'anonymous',
         });
@@ -43,6 +45,8 @@ app.get('/validate-request', (req, res) => {
     const token = authHeader.split(' ')[1];
 
     if (!token) {
+        console.log('INFO: No token provided. Unauthorized.');
+
         return res.status(401).json({
             error: 'Unauthorized',
             message: 'Missing token',
@@ -53,6 +57,8 @@ app.get('/validate-request', (req, res) => {
         const payload = jwt.verify(token, JWT_SECRET_KEY);
 
         if (!payload["claims.jwt.hasura.io"]) {
+            console.log('INFO: Invalid payload structure. Unauthorized.');
+
             return res.status(403).json({
                 error: 'Unauthorized',
                 message: 'Invalid payload structure',
@@ -68,6 +74,8 @@ app.get('/validate-request', (req, res) => {
 
         return res.status(200).json({ sessionVariables });
     } catch (error) {
+        console.log('INFO: Invalid or expired token. Unauthorized.');
+        
         return res.status(401).json({
             error: 'Unauthorized',
             message: 'Invalid or expired token',
