@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
