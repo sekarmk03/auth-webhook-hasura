@@ -16,6 +16,14 @@ app.use(cors({
 }));
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+    const ip_addr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    return res.status(200).json({
+        status: 'OK',
+        message: `Welcome to Auth JWT Webhook for Hasura! Your IP address is ${ip_addr}`,
+    });
+});
+
 app.post('/validate-request', (req, res) => {
     let authHeader = req.header('Authorization');
     if (!authHeader) {
