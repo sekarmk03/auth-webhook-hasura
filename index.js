@@ -81,7 +81,7 @@ app.get('/validate-request', (req, res) => {
             'X-Hasura-Role': claims["x-hasura-role"] || "user",
         };
 
-        return res.status(200).json({ sessionVariables });
+        return res.status(200).json(sessionVariables);
     } catch (error) {
         console.log('INFO: Invalid or expired token. Unauthorized.');
 
