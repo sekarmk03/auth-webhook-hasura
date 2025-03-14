@@ -6,7 +6,15 @@ const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
 
-app.use(morgan('prod'));
+app.use(morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms'
+    ].join(' ')
+}));
 app.use(express.json());
 app.use(cors({
   origin: '*',
@@ -42,7 +50,7 @@ app.get('/validate-request', (req, res) => {
     }
 
     try {
-        const payload = jwt.verify(token, SECRET_KEY);
+        const payload = jwt.verify(token, JWT_SECRET_KEY);
 
         if (!payload["claims.jwt.hasura.io"]) {
             return res.status(403).json({
