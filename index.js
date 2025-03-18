@@ -7,6 +7,8 @@ const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
 
+const ALLOWED_IPS = new Set(["10.100.14.2", "104.28.245.127", "104.28.213.128"]);
+
 app.use(morgan(function (tokens, req, res) {
     return [
       tokens.method(req, res),
@@ -24,6 +26,21 @@ app.use(cors({
   allowedHeaders: ['Content-Type'],
 }));
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    const sanitizedIp = clientIp.includes('::ffff:') ? clientIp.split('::ffff:')[1] : clientIp;
+
+    console.log(`INFO: Incoming request from IP: ${sanitizedIp}`);
+
+    if (!ALLOWED_IPS.has(sanitizedIp)) {
+        console.log(`WARNING: Unauthorized access attempt from ${sanitizedIp}`);
+        return res.status(401).json({ error: "Forbidden", message: "Access denied" });
+    }
+
+    next();
+});
 
 app.get('/', (req, res) => {
     const ip_addr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
