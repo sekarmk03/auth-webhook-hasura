@@ -7,7 +7,7 @@ const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
 
-const ALLOWED_IPS = new Set(["10.100.14.2", "104.28.245.127", "104.28.213.128"]);
+const ALLOWED_IPS = new Set(["10.100.14.2", "104.28.245.127", "104.28.213.128", "104.28.213.124"]);
 
 app.use(morgan(function (tokens, req, res) {
     return [
