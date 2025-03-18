@@ -52,10 +52,6 @@ app.get('/', (req, res) => {
 
 app.get('/validate-request', (req, res) => {
     let authHeader = req.header('Authorization');
-    console.log('DEBUG: Authorization header:', authHeader);
-
-    let lowerCaseAuthHeader = req.header('authorization');
-    console.log('DEBUG: Lowercase Authorization header:', lowerCaseAuthHeader);
     
     if (!authHeader) {
         console.log('INFO: No Authorization header found. Granting anonymous access.');
@@ -66,7 +62,6 @@ app.get('/validate-request', (req, res) => {
     }
 
     const token = authHeader.split(' ')[1];
-    console.log('DEBUG: Token:', token);
 
     if (!token) {
         console.log('INFO: No token provided. Unauthorized.');
@@ -79,7 +74,6 @@ app.get('/validate-request', (req, res) => {
 
     try {
         const payload = jwt.verify(token, JWT_SECRET_KEY);
-        console.log('DEBUG: Payload ', payload);
 
         if (!payload["claims.jwt.hasura.io"]) {
             console.log('INFO: Invalid payload structure. Unauthorized.');
@@ -91,7 +85,6 @@ app.get('/validate-request', (req, res) => {
         }
 
         const claims = payload["claims.jwt.hasura.io"];
-        console.log('DEBUG: Claims', claims);
             
         const sessionVariables = {
             'X-Hasura-User-Id': claims["x-hasura-user-id"] || payload.id,
