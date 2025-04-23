@@ -7,7 +7,7 @@ const { JWT_SECRET_KEY } = process.env;
 
 const app = express();
 
-const ALLOWED_IPS = new Set(["10.100.14.2", "104.28.245.127", "104.28.213.128", "104.28.213.124", "104.28.213.125", "104.28.213.127", "117.54.18.53"]);
+// const ALLOWED_IPS = new Set(["10.100.14.2", "104.28.245.127", "104.28.213.128", "104.28.213.124", "104.28.213.125", "104.28.213.127", "117.54.18.53"]);
 
 app.use(morgan(function (tokens, req, res) {
     return [
@@ -85,11 +85,11 @@ app.get('/validate-request', (req, res) => {
         }
 
         const claims = payload["claims.jwt.hasura.io"];
-            
+        
         const sessionVariables = {
             'X-Hasura-User-Id': claims["x-hasura-user-id"] || payload.id,
-            // 'X-Hasura-Role': claims["x-hasura-role"] || "user",
-            'X-Hasura-Role': "admin",
+            'X-Hasura-Role': claims["x-hasura-role"] || "user",
+            // 'X-Hasura-Role': "admin",
         };
 
         return res.status(200).json(sessionVariables);
